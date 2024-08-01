@@ -56,6 +56,20 @@ const Page = () => {
         size: 150,
       },
       {
+        accessorKey: "active",
+        header: "Active",
+        size: 100,
+        Cell: ({ cell }) => {
+          const isActive = cell.getValue<boolean>();
+          const cName = isActive ? 'bg-[#11ba82]' : 'bg-[#c2c2c2]'
+          return (
+            <div className="flex items-center">
+              <div className={`w-4 h-4 rounded-full ${cName}`}></div>
+            </div>
+          )
+        },
+      },
+      {
         accessorKey: "groups",
         header: "User Role",
         size: 150,
@@ -78,16 +92,16 @@ const Page = () => {
       {
         accessorKey: "action",
         header: "Action",
-        size: 200,
+        size: 100,
         enableSorting: false,
         Cell: ({ cell, row }) => {
           return (
             <div className="flex gap-4">
               <div onClick={() => handleModifyUser(row.original)} className="flex gap-1 text-xs items-center cursor-pointer text-[#818f99] hover:text-black duration-500">
-                <EditOutlinedIcon fontSize="small"/>
+                <EditOutlinedIcon fontSize="small" />
               </div>
               <div onClick={() => handleDeleteUser(row.original)} className="flex gap-1 text-xs items-center cursor-pointer text-[#818f99] hover:text-black duration-500">
-                <DeleteIcon fontSize="small"/>
+                <DeleteIcon fontSize="small" />
               </div>
             </div>
           )
@@ -112,7 +126,7 @@ const Page = () => {
     handleOpenDeleteModal();
     setSelectedUser(row);
   };
-  
+
   return (
     <div className="flex flex-col gap-10">
       {isLoading ? (
