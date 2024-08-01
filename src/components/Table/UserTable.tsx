@@ -37,10 +37,10 @@ const UserTable = <T extends MRT_RowData>({ title, data, columns, handleCreateUs
         enableColumnPinning: true,
         enableRowSelection: true,
         muiTableBodyRowProps: ({ row }) => ({
-            className: `${'hover:bg-[#f6fbff]'} bg-[#f7f9fa]`,
+            className: `${'hover:bg-[#f6fbff]'}`,
         }),
         muiTableHeadCellProps: () => ({
-            className: 'align-middle bg-[#f7f9fa]',
+            className: 'align-middle',
         }),
         muiPaginationProps: {
             color: 'primary',
