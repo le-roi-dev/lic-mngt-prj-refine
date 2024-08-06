@@ -54,7 +54,13 @@ const GenericTable = <T extends MRT_RowData>({ title, data, columns, onRowClick,
             showRowsPerPage: false,
             variant: 'outlined',
         },
-        paginationDisplayMode: 'pages'
+        paginationDisplayMode: 'pages',
+        initialState: {
+            columnPinning: {
+                left: [],
+                right: ['actions'],
+            },
+        },
     });
 
     return (
