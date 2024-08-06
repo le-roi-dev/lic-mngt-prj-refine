@@ -151,7 +151,7 @@ const Page = () => {
         }
         isLoading={isLoading}
         breadcrumb={false}
-        wrapperProps={{ className: "pt-6" }}
+        wrapperProps={{ className: "rounded-xl shadow-md bg-white pt-6 pb-2.5 dark:border-strokedark dark:bg-boxdark " }}
         title={
           <div className="!font-satoshi text-xl font-semibold text-black flex items-center">
             Asset {asset?.license_key}
@@ -297,7 +297,7 @@ const Page = () => {
         }
       ></Show>
       <div className="flex flex-col gap-10 mt-6">
-        <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+        <div className="rounded-xl shadow-md bg-white px-5 pt-6 pb-2.5 dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
           <div className="flex justify-between">
             <div className="text-xl font-semibold text-black flex items-center gap-2">
               <LicenseIcon />

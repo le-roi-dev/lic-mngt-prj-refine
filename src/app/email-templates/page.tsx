@@ -46,7 +46,7 @@ const Page = () => {
 
   return (
     <div className="flex w-full justify-center text-black text-sm">
-      <div className="min-w-[800px] rounded-xl px-8 py-8 drop-shadow-md bg-white">
+      <div className="min-w-[800px] rounded-xl px-8 py-8 shadow-md bg-white">
         <div className="text-lg font-medium"> Configure common settings for sending emails </div>
         <div className="flex gap-4 w-full py-8">
           <FormControl className="w-full">
