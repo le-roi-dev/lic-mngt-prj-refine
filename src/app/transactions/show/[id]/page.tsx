@@ -46,7 +46,7 @@ const TransactionShow = () => {
         </div>
       )}
     >
-      <div className="flex">
+      <div className="flex gap-12 px-12">
         <GeneralInformation
           header="Transaction information"
           headerIcon={<FeedOutlinedIcon />}

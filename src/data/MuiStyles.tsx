@@ -79,12 +79,12 @@ export const tagStyle = {
 export const refineBtnStyle = {
     bgcolor: 'white', // Background color
     border: '2px solid', // Set the border style
-    px: 3, // Horizontal padding
     py: 0.5,  // Vertical padding
     borderRadius: '20px', // Rounded corners
     boxShadow: 'none',
     textTransform: 'none',
     fontWeight: '500',
+    minWidth: '120px',
     fontSize: '0.875rem',
     '&:hover': {
         bgcolor: 'white', // Background color on hover
@@ -94,19 +94,25 @@ export const refineBtnStyle = {
 }
 
 export const editRefineBtnStyle = {
-    color: '#11ba82',
-    borderColor: '#11ba82',
+    // color: '#11ba82',
+    // borderColor: '#11ba82',
+    color: '#003133',
+    borderColor: '#003133',
     ...refineBtnStyle
 }
 
 export const deleteRefineBtnStyle = {
-    color: '#fa5252',
-    borderColor: '#fa5252',
+    // color: '#fa5252',
+    // borderColor: '#fa5252',
+    color: '#003133',
+    borderColor: '#003133',
     ...refineBtnStyle
 }
 
 export const refreshRefineBtnStyle = {
-    color: '#4580ff',
-    borderColor: '#4580ff',
+    // color: '#4580ff',
+    // borderColor: '#4580ff',
+    color: '#003133',
+    borderColor: '#003133',
     ...refineBtnStyle
 }
