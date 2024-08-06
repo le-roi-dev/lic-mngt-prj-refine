@@ -22,10 +22,12 @@ import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
 
 export type TransactionFormProps = GenericFormProps & {
   transaction?: Transaction;
+  isCreate?: boolean,
 };
 const dividerStyle = { fontSize: '1.5rem', py: '1.5rem', fontWeight: 'bold', color: '#65758c' }
 
 const TransactionForm = (props: TransactionFormProps) => {
+  console.log(props);
   const FormGroups = [
     {
       icon: <PaidOutlinedIcon />,
@@ -43,7 +45,7 @@ const TransactionForm = (props: TransactionFormProps) => {
       icon: <CategoryOutlinedIcon />,
       title: 'Asset',
       description: 'Setup your Asset data',
-      fields: AssetFormFields
+      fields: props.isCreate? AssetFormFields.map(f => ({...f, disabled: true})) : AssetFormFields
     },
     {
       icon: <AccountBalanceWalletOutlinedIcon />,

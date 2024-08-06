@@ -58,7 +58,7 @@ const TransactionEdit = () => {
         <Loader />
       ) : (
         <div className="bg-white px-8 rounded-xl">
-          <TransactionForm
+          <TransactionForm isCreate
             {...{ control, errors, trigger }}
           />
         </div>

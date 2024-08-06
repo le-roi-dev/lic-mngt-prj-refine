@@ -12,7 +12,7 @@ const ProductFormFields: FieldConfig[] = [
         size: 2,
         resource: "products",
         valueKey: "osc_part_number",
-        labelKey: "osc_part_number"
+        labelKey: "osc_part_number",
     },
     {
         name: "osc_product.vendor_name",
@@ -21,6 +21,7 @@ const ProductFormFields: FieldConfig[] = [
         rules: { required: "Vendor name is required" },
         type: "text",
         size: 2,
+        disabled: true
     },
     {
         name: "osc_product.vendor_part_number",
@@ -29,6 +30,7 @@ const ProductFormFields: FieldConfig[] = [
         rules: { required: "Vendor part number is required" },
         type: "text",
         size: 2,
+        disabled: true
     },
 ];
 
