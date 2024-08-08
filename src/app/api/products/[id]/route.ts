@@ -4,8 +4,7 @@ import { mockProducts } from "../mockData";
 const products = mockProducts;
 
 export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
+  req: NextRequest, { params }
 ) {
   const product = products.find((product) => product.id === params.id);
   return NextResponse.json(product);
@@ -15,10 +14,10 @@ export async function PATCH(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const updatedProduct = req.body as any;
+  const updatedProduct = await req.json();
   const index = products.findIndex((product) => product.id === params.id);
   products[index] = updatedProduct;
-  return NextResponse.json(updatedProduct);
+  return NextResponse.json(products[index]);
 }
 
 export async function DELETE(

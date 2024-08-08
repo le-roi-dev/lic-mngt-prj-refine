@@ -1,6 +1,6 @@
 "use client";
 
-import { useShow } from "@refinedev/core";
+import { usePermissions, useShow } from "@refinedev/core";
 import {
   Show,
   EditButton,
@@ -9,7 +9,7 @@ import {
 } from "@refinedev/mui";
 import Link from "next/link";
 import GeneralInformation from "@components/common/View/GeneralInformation";
-import { Asset, Seat } from "@/types/types";
+import { Asset, Permission, Seat } from "@/types/types";
 import GeneralInformationIcon from "@/assets/icons/generalinfo.svg?icon";
 import TransactionIcon from "@/assets/icons/transaction.svg?icon";
 import ArrowIcon from "@/assets/icons/arrow.svg?icon";
@@ -21,79 +21,13 @@ import LicenseIcon from "@/assets/icons/license.svg?icon";
 import AssetIcon from "@/assets/icons/asset.svg?icon"
 import { Box, Fade, styled, Tab, Tabs } from "@mui/material";
 import { deleteRefineBtnStyle, editRefineBtnStyle, refreshRefineBtnStyle } from "@data/MuiStyles";
+import { CustomTabPanel, StyledTab, StyledTabs } from "@components/Tab/CustomizedTab";
 
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
 
-const CustomTabPanel = (props: TabPanelProps) => {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      <Fade in={value === index} timeout={300}>
-        <Box sx={{ py: 3 }}>
-          {children}
-        </Box>
-      </Fade>
-    </div>
-  );
-}
-
-interface StyledTabsProps {
-  children?: React.ReactNode;
-  value: number;
-  onChange: (event: React.SyntheticEvent, newValue: number) => void;
-}
-
-const StyledTabs = styled((props: StyledTabsProps) => (
-  <Tabs
-    {...props}
-    TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
-  />
-))({
-  '& .MuiTabs-indicator': {
-    display: 'flex',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-  },
-  '& .MuiTabs-indicatorSpan': {
-    // maxWidth: 100,
-    width: '100%',
-    backgroundColor: '#4580ff',
-  },
-});
-
-interface StyledTabProps {
-  label: string;
-}
-
-const StyledTab = styled((props: StyledTabProps) => (
-  <Tab disableRipple {...props} />
-))(({ theme }) => ({
-  textTransform: 'none',
-  fontWeight: theme.typography.fontWeightMedium,
-  fontSize: theme.typography.pxToRem(17),
-  marginRight: theme.spacing(1),
-  color: '#96a3ab',
-  '&.Mui-selected': {
-    color: '#4580ff',
-  },
-  '&.Mui-focusVisible': {
-    backgroundColor: 'rgba(100, 95, 228, 0.32)',
-  },
-}));
 
 const Page = () => {
   const [value, setValue] = useState(0);
+  const { data: permissionsData } = usePermissions<Permission>({ params: { codename: "asset" } });
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -138,23 +72,30 @@ const Page = () => {
     []
   );
 
+  const summaryfields = [
+    { title: "Start Date", key: "start_date" },
+    { title: "End Date", key: "end_date" },
+    { title: "License Key", key: "license_key" },
+  ]
+
+  const getNestedValue = (obj: any, key: string) => {
+    return key.split('.').reduce((acc, part) => acc && acc[part], obj);
+  }
+
   return (
-    <div>
+    <div className="no-padding-card">
       <Show
-        goBack={
-          <Link
-            href={"/assets"}
-            className="inline-block mx-2 p-2 rounded-xl border duration-500 border-transparent hover:border-black"
-          >
-            <ArrowIcon />
-          </Link>
-        }
+        goBack={null}
         isLoading={isLoading}
         breadcrumb={false}
-        wrapperProps={{ className: "rounded-xl shadow-md bg-white pt-6 pb-2.5 dark:border-strokedark dark:bg-boxdark " }}
+        wrapperProps={{ className: "rounded-none bg-[#f2f6fa] shadow-none pt-6 pb-2.5" }}
         title={
-          <div className="!font-satoshi text-xl font-semibold text-black flex items-center">
-            Asset {asset?.license_key}
+          <div className="!font-satoshi px-12">
+            <div className="text-2xl font-semibold text-[#515f72]">Asset</div>
+            <div className="flex gap-4 text-sm text-[#656f7c] mt-2">
+              <div className="">Asset ID</div>
+              <div className="">{asset?.id}</div>
+            </div>
           </div>
         }
         headerButtons={({
@@ -163,140 +104,161 @@ const Page = () => {
           refreshButtonProps,
         }) => (
           <div className="flex gap-2 pr-10">
-            <EditButton {...editButtonProps} sx={editRefineBtnStyle} />
-            <DeleteButton {...deleteButtonProps} sx={deleteRefineBtnStyle} />
+            {permissionsData?.update && <EditButton {...editButtonProps} sx={editRefineBtnStyle} />}
+            {permissionsData?.delete && <DeleteButton {...deleteButtonProps} sx={deleteRefineBtnStyle} />}
             <RefreshButton {...refreshButtonProps} sx={refreshRefineBtnStyle} />
           </div>
         )}
-        children={
-          <div className="px-8">
-            <div>
-              <StyledTabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                <StyledTab label="General Information" />
-                <StyledTab label="Last Transaction Detail" />
-                <StyledTab label="Asset Status" />
-              </StyledTabs>
-            </div>
-
-            <CustomTabPanel value={value} index={0}>
-              <GeneralInformation
-                singleColumn={true}
-                className="bg-gray px-2 py-2"
-                items={[
-                  { label: "Asset Id", value: asset?.id },
-                  { label: "Organization", value: asset?.organization },
-                  {
-                    label: "Asset number (LicKey/Srl#)",
-                    value: asset?.license_key,
-                  },
-                  {
-                    label: "Product part number",
-                    value: asset?.osc_product.osc_part_number,
-                  },
-                  {
-                    label: "Asset type",
-                    value: asset?.osc_product.product_type,
-                  },
-                  {
-                    label: "Vender name",
-                    value: asset?.osc_product.vendor_name,
-                  },
-                  {
-                    label: "Vendor part",
-                    value: asset?.osc_product.product_name,
-                  },
-                ]}
-              />
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={1}>
-              <GeneralInformation
-                singleColumn={true}
-                className="bg-gray px-2 py-2"
-                items={[
-                  {
-                    label: "Transaction number",
-                    value: asset?.last_transaction?.transaction_number,
-                  },
-                  {
-                    label: "Transaction date",
-                    value: asset?.last_transaction?.transaction_date,
-                  },
-                  {
-                    label: "Transaction type",
-                    value: asset?.last_transaction?.transaction_type,
-                  },
-                  {
-                    label: "Owner account",
-                    value: "",
-                  },
-                  {
-                    label: "Owner name",
-                    value: "",
-                  },
-                  {
-                    label: "UOM (Duration/Each)",
-                    value: asset?.osc_product.duration,
-                  },
-                  {
-                    label: "Start date",
-                    value: asset?.last_transaction?.start_date,
-                  },
-                  {
-                    label: "End date",
-                    value: asset?.last_transaction?.end_date,
-                  },
-                ]}
-              />
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={2}>
-              <GeneralInformation
-                singleColumn={true}
-                className="bg-gray px-2 py-2"
-                items={[
-                  { label: "Seats - OSC Master", value: asset?.osc_seat_count },
-                  {
-                    label: "Seats - License Server",
-                    value: asset?.license_server_seat_count.toString(),
-                  },
-                  {
-                    label: "Asset status",
-                    value: asset?.status,
-                  },
-                  {
-                    label: "Status date",
-                    value: asset?.status_update_date,
-                  },
-                  {
-                    label: "Active",
-                    value: asset?.active_seats.toString(),
-                  },
-                  {
-                    label: "Renewal Due",
-                    value: asset?.renewal_seats.toString(),
-                  },
-                  {
-                    label: "Suspended",
-                    value: asset?.suspended_seats.toString(),
-                  },
-                  {
-                    label: "Expired",
-                    value: asset?.expired_seats.toString(),
-                  },
-                  {
-                    label: "Revoked",
-                    value: asset?.revoked_seats.toString(),
-                  },
-                  {
-                    label: "Terminated",
-                    value: asset?.terminated_seats.toString(),
-                  },
-                ]}
-              />
-            </CustomTabPanel>
+      >
+        <div className="flex gap-16 px-12 mt-8">
+          {
+            summaryfields.map(field => (
+              <div className="flex flex-col gap-1">
+                <div className="text-[#778599]">{field.title}</div>
+                <div className="text-[#515f72] text-xl font-semibold">{getNestedValue(asset, field.key)}</div>
+              </div>
+            ))
+          }
+        </div>
+        <div className="">
+          <div className="px-12 pt-4">
+            <StyledTabs value={value} onChange={handleChange} aria-label="basic tabs example">
+              <StyledTab label="General Information" />
+              <StyledTab label="Last Transaction Detail" />
+              <StyledTab label="Asset Status" />
+              <StyledTab label="Seats" />
+            </StyledTabs>
           </div>
-        }
-      ></Show>
-      <div className="flex flex-col gap-10 mt-6">
+
+          <CustomTabPanel value={value} index={0}>
+            <GeneralInformation
+              singleColumn={true}
+              items={[
+                { label: "Asset Id", value: asset?.id },
+                { label: "Organization", value: asset?.organization },
+                {
+                  label: "Asset number (LicKey/Srl#)",
+                  value: asset?.license_key,
+                },
+                {
+                  label: "Product part number",
+                  value: asset?.osc_product.osc_part_number,
+                },
+                {
+                  label: "Asset type",
+                  value: asset?.osc_product.product_type,
+                },
+                {
+                  label: "Vender name",
+                  value: asset?.osc_product.vendor_name,
+                },
+                {
+                  label: "Vendor part",
+                  value: asset?.osc_product.product_name,
+                },
+              ]}
+            />
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={1}>
+            <GeneralInformation
+              singleColumn={true}
+              items={[
+                {
+                  label: "Transaction number",
+                  value: asset?.last_transaction?.transaction_number,
+                },
+                {
+                  label: "Transaction date",
+                  value: asset?.last_transaction?.transaction_date,
+                },
+                {
+                  label: "Transaction type",
+                  value: asset?.last_transaction?.transaction_type,
+                },
+                {
+                  label: "Owner account",
+                  value: "",
+                },
+                {
+                  label: "Owner name",
+                  value: "",
+                },
+                {
+                  label: "UOM (Duration/Each)",
+                  value: asset?.osc_product.duration,
+                },
+                {
+                  label: "Start date",
+                  value: asset?.last_transaction?.start_date,
+                },
+                {
+                  label: "End date",
+                  value: asset?.last_transaction?.end_date,
+                },
+              ]}
+            />
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={2}>
+            <GeneralInformation
+              singleColumn={true}
+              items={[
+                { label: "Seats - OSC Master", value: asset?.osc_seat_count },
+                {
+                  label: "Seats - License Server",
+                  value: asset?.license_server_seat_count.toString(),
+                },
+                {
+                  label: "Asset status",
+                  value: asset?.status,
+                },
+                {
+                  label: "Status date",
+                  value: asset?.status_update_date,
+                },
+                {
+                  label: "Active",
+                  value: asset?.active_seats.toString(),
+                },
+                {
+                  label: "Renewal Due",
+                  value: asset?.renewal_seats.toString(),
+                },
+                {
+                  label: "Suspended",
+                  value: asset?.suspended_seats.toString(),
+                },
+                {
+                  label: "Expired",
+                  value: asset?.expired_seats.toString(),
+                },
+                {
+                  label: "Revoked",
+                  value: asset?.revoked_seats.toString(),
+                },
+                {
+                  label: "Terminated",
+                  value: asset?.terminated_seats.toString(),
+                },
+              ]}
+            />
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={3}>
+            <div className="flex justify-between">
+              <div className="text-xl font-semibold text-black flex items-center gap-2">
+                <LicenseIcon />
+                Seats
+              </div>
+            </div>
+            <div className="max-w-full overflow-x-auto">
+              <GenericTable
+                data={seats}
+                columns={columns}
+              />
+            </div>
+          </CustomTabPanel>
+        </div>
+      </Show>
+      {/* <div className="flex flex-col gap-10 mt-6">
         <div className="rounded-xl shadow-md bg-white px-5 pt-6 pb-2.5 dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
           <div className="flex justify-between">
             <div className="text-xl font-semibold text-black flex items-center gap-2">
@@ -311,7 +273,7 @@ const Page = () => {
             />
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
