@@ -57,7 +57,7 @@ const getCurrentUser = async (): Promise<User | null> => {
 
 export const authProvider: AuthProvider = {
     login: async ({ email, password }) => {
-        const response = await fetch("http://license-management-server-lysrkspm1.vercel.app/login/", {
+        const response = await fetch("https://license-management-server-lysrkspm1.vercel.app/login/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -81,7 +81,7 @@ export const authProvider: AuthProvider = {
         // }
     },
     register: async ({ token, username, password, first_name, last_name }) => {
-        const response = await fetch("http://license-management-server-lysrkspm1.vercel.app/register/", {
+        const response = await fetch("https://license-management-server-lysrkspm1.vercel.app/register/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

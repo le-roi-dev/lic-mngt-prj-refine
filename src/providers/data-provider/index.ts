@@ -7,7 +7,7 @@ import jwt_decode from 'jwt-decode';
 const API_URL =
   process.env.NODE_ENV === "development"
     // ? "http://localhost:3000/api"
-    ? "http://license-management-server-lysrkspm1.vercel.app"
+    ? "https://license-management-server-lysrkspm1.vercel.app"
     : "https://lic-refine.vercel.app/api";
 
 // export const dataProvider = dataProviderSimpleRest(API_URL);
