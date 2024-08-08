@@ -2,7 +2,6 @@
 
 import dataProviderSimpleRest from "@refinedev/simple-rest";
 import nestjsxDataProvider, { axiosInstance } from "@refinedev/nestjsx-crud";
-import jwt_decode from 'jwt-decode';
 
 const API_URL =
   process.env.NODE_ENV === "development"
